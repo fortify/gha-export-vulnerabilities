@@ -4,8 +4,12 @@ Build secure software fast with [Fortify](https://www.microfocus.com/en-us/solut
 
 This GitHub Action utilizes [FortifyVulnerabilityExporter](https://github.com/fortify/FortifyVulnerabilityExporter) to export Fortify vulnerability data from either Fortify on Demand (FoD) or Fortify Software Security Center (SSC) to various output formats or other systems. In the GitHub ecosystem, the default use case for this action is to export Fortify SAST results to GitHub's Security Code Scanning Alerts. Apart from this default use case, this GitHub Action also supports any of the other export targets provided by FortifyVulnerabilityExporter.
 
-After reviewing the [Requirements](#requirements), the following sections provide instructions on how to use this GitHub action:
+## Table of Contents
 
+* [Requirements](#requirements)
+    * [FoD or SSC instance](#fod-or-ssc-instance)
+    * [Network connectivity](#network-connectivity)
+    * [Java](#java)
 * [Usage](#usage)
     * [Export FoD vulnerability data](#export-fod-vulnerability-data)
         * [FoD to GitHub Code Scanning Alerts](#fod-to-github-code-scanning-alerts)
@@ -15,8 +19,8 @@ After reviewing the [Requirements](#requirements), the following sections provid
         * [SSC to GitHub Code Scanning Alerts](#ssc-to-github-code-scanning-alerts)
         * [SSC to other output formats](#ssc-to-other-output-formats)
         * [SSC Inputs](#ssc-inputs)
-
-Before contributing any changes to this repository, developers and maintainers should review the [Information for Developers](#information-for-developers) section.
+* [Docker-based alternative](#docker-based-alternative)
+* [Information for Developers](#information-for-developers)
 
 ## Requirements
 
