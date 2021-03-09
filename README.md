@@ -34,7 +34,7 @@ The FoD or SSC instance from which to retrieve vulnerability data needs to be ac
 | SSC    | Self-hosted   | May need to allow network access from the self-hosted runner to SSC if in different network segments |
 
 ### Java
-This GitHub Action requires Java to be installed on the GitHub Runner. At the time of writing, all GitHub-hosted runners provide one or more Java installations, but FortifyVulnerabilityExporter may not have been tested with the Java versions provided by a specific runner. If you want to run this action on a GitHub Runner that does not have Java installed, or if you want to use a specific Java version for running FortifyVulnerabilityExporter, you can use the [setup-java](https://github.com/actions/setup-java) action before using the `gha-export-vulnerabilities` action.
+This GitHub Action requires Java to be installed on the GitHub Runner. At the time of writing, all GitHub-hosted runners provide one or more Java installations, but FortifyVulnerabilityExporter may not have been tested with the Java versions provided by a specific runner. If you want to run this action on a GitHub Runner that does not have Java installed, or if you want to use a specific Java version for running FortifyVulnerabilityExporter, you can use the [setup-java](https://github.com/actions/setup-java) action before using the `gha-export-vulnerabilities` action. Alternatively you can use the [FortifyVulnerabilityExporter Docker image](#docker-based-alternative) in your workflows, as this does not require an appropriate Java version to be installed on the GitHub Runner.
 
 ## Usage
 
@@ -144,7 +144,11 @@ jobs:
 *Optional* The directory where generated output file(s) will be stored, defaults to `${GITHUB_WORKSPACE}`. This should be an absolute path.
 
 **Other FortifyVulnerabilityExporter configuration options**  
-As described in the FortifyVulnerabilityExporter [Configuration Sources](https://github.com/fortify/FortifyVulnerabilityExporter#configuration-sources) documentation section, configuration options can be specified through environment variables. As such, you can use the [`jobs.<job_id>.steps[*].env`](https://docs.github.com/en/actions/reference/workflow-syntax-for-github-actions#jobsjob_idstepsenv) property in yor GitHub workflow to specify or override any FortifyVulnerabilityExporter configuration options for which no standard input parameter is available. Alternatively, you can provide customized configuration options in a custom configuration file specified through the `export_config` input parameter.
+If you need to customize any options that are not available as action input parameters, you can do so using one of the following approaches:
+
+* Use the [`jobs.<job_id>.steps[*].env`](https://docs.github.com/en/actions/reference/workflow-syntax-for-github-actions#jobsjob_idstepsenv) property in your GitHub workflow; FortifyVulnerabilityExporter allows for reading configuration properties from environment variables as described in the FortifyVulnerabilityExporter [Configuration Sources](https://github.com/fortify/FortifyVulnerabilityExporter#configuration-sources) section
+* Provide a customized configuration file specified through the `export_config` input parameter
+* Use the [FortifyVulnerabilityExporter Docker image](#docker-based-alternative) in your workflows
 
 ### Export SSC vulnerability data
 
@@ -246,8 +250,35 @@ jobs:
 *Optional* The directory where generated output file(s) will be stored, defaults to `${GITHUB_WORKSPACE}`. This should be an absolute path.
 
 **Other FortifyVulnerabilityExporter configuration options**  
-As described in the FortifyVulnerabilityExporter [Configuration Sources](https://github.com/fortify/FortifyVulnerabilityExporter#configuration-sources) documentation section, configuration options can be specified through environment variables. As such, you can use the [`jobs.<job_id>.steps[*].env`](https://docs.github.com/en/actions/reference/workflow-syntax-for-github-actions#jobsjob_idstepsenv) property in yor GitHub workflow to specify or override any FortifyVulnerabilityExporter configuration options for which no standard input parameter is available. Alternatively, you can provide customized configuration options in a custom configuration file specified through the `export_config` input parameter.
+If you need to customize any options that are not available as action input parameters, you can do so using one of the following approaches:
 
+* Use the [`jobs.<job_id>.steps[*].env`](https://docs.github.com/en/actions/reference/workflow-syntax-for-github-actions#jobsjob_idstepsenv) property in your GitHub workflow; FortifyVulnerabilityExporter allows for reading configuration properties from environment variables as described in the FortifyVulnerabilityExporter [Configuration Sources](https://github.com/fortify/FortifyVulnerabilityExporter#configuration-sources) section
+* Provide a customized configuration file specified through the `export_config` input parameter
+* Use the [FortifyVulnerabilityExporter Docker image](#docker-based-alternative) in your workflows
+
+## Docker-based alternative
+[FortifyVulnerabilityExporter](https://github.com/fortify/FortifyVulnerabilityExporter) is also available as a Docker image. As GitHub allows for using Docker images in a similar way as regular GitHub Actions, it is very easy to use the [FortifyVulnerability Docker images](https://hub.docker.com/repository/docker/fortifydocker/fortify-vulnerability-exporter) in your workflows instead of the `gha-export-vulnerabilities` action. As both this GitHub action and the Docker image run the same FortifyVulnerabilityExporter implementation, even most of the input parameters are the same. Following is an example on how to export FoD vulnerabilities to a GitHub-optimized SARIF file using the Docker image in a GitHub Actions workflow:
+
+```
+      - uses: docker://fortifydocker/fortify-vulnerability-exporter:latest
+        with:
+          export_config: /config/FoDToGitHub.yml
+          fod_baseUrl: ${{ secrets.FOD_EIGHTBALL_BASE_URL }}
+          fod_tenant: ${{ secrets.FOD_EIGHTBALL_TENANT }}
+          fod_userName: ${{ secrets.FOD_EIGHTBALL_USER }}
+          fod_password: ${{ secrets.FOD_EIGHTBALL_PAT }}
+          fod_release_id: ${{ secrets.FOD_EIGHTBALL_RELEASE_ID }}
+```
+
+As you can see, this is very similar to the `gha-export-vulnerabilities` step shown in the [FoD to GitHub Code Scanning Alerts](#fod-to-github-code-scanning-alerts) section. The main differences between the Docker image and the `gha-export-vulnerabilities` action are as follows:
+
+| Docker Image | GitHub Action |
+| ------------ | ------------- |
+| Requires a Linux-based runner | Can run on any platform where Java is available |
+| Requires Docker to be installed on the runner | Requires Java to be installed on the runner |
+| Requires explicit `export_config` option | Exports to GitHub-optimized SARIF by default |
+| Doesn't support the `export_target` option | Automatically selects between FoD or SSC configuration files for a configured `export_target`  |
+| All configuration options can be specified in the `with:` clause | Only a select subset of configuration options can be specified in the `with:` clause |
 
 ## Information for Developers
 
