@@ -1,0 +1,75 @@
+name: 'Export Fortify vulnerability data'
+description: 'Export Fortify vulnerability data to various targets'
+author: 'Fortify'
+inputs:
+  # SSC inputs
+  ssc_base_url:
+    description: 'SSC Base URL (e.g. https://my.ssc.host/ssc)'
+    required: false
+  ssc_auth_token:
+    description: 'SSC CI authentication token'
+    required: false
+  ssc_user:
+    description: 'SSC user name'
+    required: false
+  ssc_password:
+    description: 'SSC password'
+    required: false
+  ssc_version_id:
+    description: 'SSC application version id from which to download SAST vulnerabilities'
+    required: false
+  ssc_version_name:
+    description: 'SSC <application name>:<version name> from which to download SAST vulnerabilities'
+    required: false
+  ssc_vuln_filter_set_id:
+    description: 'SSC filter set id from which to download SAST vulnerabilities'
+    required: false
+  
+  # FoD inputs
+  fod_base_url:
+    description: 'FoD Base URL (e.g. https://ams.fortify.com)'
+    required: false
+  fod_user:
+    description: 'FoD User Name'
+    required: false
+  fod_password:
+    description: 'FoD Password or Access Token'
+    required: false
+  fod_tenant:
+    description: 'FoD Tenant'
+    required: false
+  fod_client_id:
+    description: 'FoD Client Id'
+    required: false
+  fod_client_secret:
+    description: 'FoD Client Secret'
+    required: false
+  fod_release_id:
+    description: 'FoD Release ID from which to download SAST vulnerabilities'
+    required: false  
+  fod_release_name:
+    description: 'FoD <application name>:<release name> from which to download SAST vulnerabilities'
+    required: false  
+
+  # Configuration settings
+  export_target:
+    description: 'The system/format to export to, used to determine the FortifyVulnerabilityExporter configuration file to use'
+    default: 'GitHub'
+    required: false
+
+  export_config:
+    description: 'FortifyVulnerabilityExporter configuration file to use, by default determined from source system (SSC or FoD) and the `to` input parameter'
+    required: false
+  
+  # Output directory
+  export_dir:
+    description: 'Directory where output files will be stored, defaults to GitHub workspace directory'
+    default: ${GITHUB_WORKSPACE}
+    required: false
+runs:
+  using: 'node12'
+  main: 'dist/index.js'
+branding:
+  icon: 'shield'
+  color: 'blue'
+
