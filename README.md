@@ -46,6 +46,9 @@ The primary use case for this action is after completion of a Fortify SAST scan.
 
 The sections below list sample workflows and related information for exporting vulnerability data from respectively FoD or SSC into GitHub Security Code Scanning Alerts or to other export targets. Additional sample workflows implementing this and other Fortify actions can be found in the following repositories:
   * [EightBall sample workflows](https://github.com/fortify/gha-sample-workflows-eightball/tree/master/.github/workflows)
+  * [ssc-js-sandbox sample workflows](https://github.com/fortify/gha-sample-workflows-ssc-js-sandbox/tree/master/.github/workflows)
+  * [WebGoat 7.1 sample workflows](https://github.com/fortify/gha-sample-workflows-WebGoat-7.1/tree/master/.github/workflows)
+  * [WebGoat.NET sample workflows](https://github.com/fortify/gha-sample-workflows-WebGoat.NET/tree/master/.github/workflows)
 
 ### Export FoD vulnerability data
 
