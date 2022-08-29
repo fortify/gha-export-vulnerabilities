@@ -69,8 +69,8 @@ async function main(): Promise<void> {
     core.info("Run FortifyVulnerabilityExporter");
     await runTool(javaPath, toolDir, configFile);
     core.info("Finished successfully");
-  } catch (error) {
-    core.setFailed(error);
+  } catch (err) {
+    core.setFailed("Action failed with error: "+err);
   }
 }
 
