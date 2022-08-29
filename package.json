@@ -1,6 +1,6 @@
 {
   "name": "gha-export-vulnerabilities",
-  "version": "1.0.0",
+  "version": "1.0.1",
   "description": "GitHub Action for exporting Fortify vulnerability data to various targets",
   "main": "dist/index.js",
   "scripts": {
